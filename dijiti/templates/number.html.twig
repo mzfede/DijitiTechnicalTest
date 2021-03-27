@@ -7,8 +7,14 @@
   <body>
     <h2>Benvenuti!</h2>
     <p>Qui puoi cercare, modificare o eliminare gli utenti iscritti.</p>
-      <div id = "add">
-        
+      <div id = "insertDiv">
+        <button type="button" id="formButton" onclick="toggleForm()">Inserisci un nuovo utente</button>
+        <form id="insertForm">
+          <b>First Name:</b> <input type="text" name="firstName">
+          <b>Last Name: </b><input type="text" name="lastName">
+          <button type="button" id="submit" onclick="inserisciUtente()">Invia</button>
+        </form>
+
       </div>
       <div id = "table">
         <table>
@@ -33,3 +39,27 @@
     </div>
   </body>
 </html>
+
+<style>
+  body{
+    padding: 3%;
+  }
+  button{
+    padding: 5px;
+    font-size: 0.8em;
+  }
+
+</style>
+<script>
+  function toggleForm() {
+    var x = document.getElementById("insertForm");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  function inserisciUtente(){
+    
+  }
+</script>
