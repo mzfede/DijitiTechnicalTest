@@ -8,7 +8,7 @@
   //require("dbConnect.php");
 
   class DijitiController extends AbstractController
-  {
+  { 
       public function number(): Response
       {
         try {

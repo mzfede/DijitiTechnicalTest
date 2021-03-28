@@ -9,11 +9,22 @@
     <p>Qui puoi cercare, modificare o eliminare gli utenti iscritti.</p>
       <div id = "insertDiv">
         <button type="button" id="formButton" onclick="toggleForm()">Inserisci un nuovo utente</button>
-        <form id="insertForm">
-          <b>First Name:</b> <input type="text" name="firstName">
-          <b>Last Name: </b><input type="text" name="lastName">
-          <button type="button" id="submit" onclick="inserisciUtente()">Invia</button>
+        <form id = "insertForm" action="InserisciController.php" method = "post/get">
+                <label>Nome:</label>
+                <input type = "text" id = "nome" required>
+                <label>Cognome:</label>
+                <input type = "text" id = "cognome" required >
+                <label>E-mail:</label>
+                <input type = "email" id = "email" required>
+                <label>Password:</label>
+                <input type = "password" id = "password" required>
+                <label>Telefono:</label>
+                <input type = "text" id = "telefono" pattern="[0-9]{10}">
+                <button type="submit" id="submit">Inserisci</button>
         </form>
+      </div>
+      <div id="deleteButtonDiv">
+        <button type="button" id="deleteButton" onclick="deleteUser()">Elimina gli utenti selezionati</button>
       </div>
       <div id = "table">
         <table>
@@ -30,9 +41,8 @@
               {% for e in elem %}
                 <td>{{ e }}</td>
               {% endfor %}
-              <td><input type="checkbox"></td>
+              <td><input type="checkbox" id="{{elem[3]}}"></td>
               </tr>
-
             {% endfor %}
           </tbody>
         </table>
@@ -66,5 +76,13 @@
   }
   function inserisciUtente(){
 
+  }
+
+  function deleteUser(){
+    var aa= document.getElementsByTagName("input");
+    for (var i =0; i < aa.length; i++){
+        if (aa[i].type == 'checkbox')
+            aa[i].checked = true;
+    }
   }
 </script>
