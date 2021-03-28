@@ -1,11 +1,7 @@
 index_number:
-    path: /number
-    controller: App\Controller\DijitiController::number
+    path: /index
+    controller: App\Controller\DijitiController::index
 
 index_text:
-    path: /text
-    controller: App\Controller\DijitiController::text
-
-inserisci_utente:
-  path: /number/inserisci
-  controller: App\templates\InserisciController.php::insert
+    path: /index/inserito
+    controller: App\Controller\DijitiController::insert
