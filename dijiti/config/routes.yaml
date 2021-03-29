@@ -1,7 +1,11 @@
-index_number:
+index_index:
     path: /index
     controller: App\Controller\DijitiController::index
 
-index_text:
+index_insert:
     path: /index/inserito
     controller: App\Controller\DijitiController::insert
+
+index_delete:
+    path: /index/eliminato
+    controller: App\Controller\DijitiController::delete
