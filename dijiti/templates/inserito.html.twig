@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+      <title>{% block title %}Utente inserito!{% endblock %}</title>
+
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+            <style>
+              body{
+                text-align: center;
+                margin-top: 2em;
+              }
+              label{
+                font-size: 1.2em;
+                padding:1em;
+              }
+            </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {% endblock %}
+    </head>
+    <body>
+      {% block body %}
+        <h2>Hai inserito l'utente: </h2>
+        <label>Nome:</label>{{nome}}<br><br>
+        <label>Cognome:</label>{{cognome}}<br><br>
+        <label>Username:</label>{{username}}<br><br>
+        <label>E-mail:</label>{{email}}<br><br>
+        <label>Password:</label>{{password}}<br><br>
+        <label>Telefono:</label>{{telefono}}<br><br>
+        <div name = "toIndex">
+          <form name = "toIndex" action="\index">
+            <button type="submit" name="submit">OK</button>
+          </form>
+        </div>
+      {% endblock %}
+    </body>
+</html>

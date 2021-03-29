@@ -36,7 +36,7 @@
               array_push($toSend, $tmp);
               $tmp = array();
             }
-            $firstRow = array_shift($toSend);
+            $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
             $db = null;
             return $this -> render('index.html.twig',[
               'tableHead' => $firstRow, 'sent' => $toSend,
@@ -54,7 +54,7 @@
               array_push($toSend, $tmp);
               $tmp = array();
             }
-            $firstRow = array_shift($toSend);
+            $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
             $db = null;
             return $this -> render('index.html.twig',[
               'tableHead' => $firstRow, 'sent' => $toSend,
