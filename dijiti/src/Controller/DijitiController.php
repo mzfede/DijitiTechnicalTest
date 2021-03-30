@@ -11,6 +11,7 @@
   {
       public function index(): Response
       {
+        $display = 'block';
         try {
               $hostname = "127.0.0.1";
               $dbname = "dijiti";
@@ -21,7 +22,40 @@
               echo "Errore: " . $e->getMessage();
               die();
           }
-        if (isset($_POST['orderBy'])){// caricamento ordinato in base al bottone cliccato
+        if (isset($_POST['caricaPrimaVolta'])){
+          $csvFile = file('../src/Imports/users.csv');
+          $data = [];
+          foreach ($csvFile as $line) {
+            $data[] = str_getcsv($line);
+          }
+          $tmp = array();
+          $toSend = array();
+          $firstRow = array();
+         foreach ($data as $value) {
+           foreach ($value as $e) {
+             array_push($tmp, $e);
+           }
+           $sql = "INSERT INTO `users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES (?,?,?,?,?,?)";
+           $db->prepare($sql)->execute([$tmp[0], $tmp[1], $tmp[2], $tmp[3], $tmp[4], $tmp[5]]);
+           $tmp = array();
+         }
+         $res = $db->query("SELECT * FROM users");
+         $res = $res->fetchAll(PDO::FETCH_ASSOC);
+         $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
+         $db = null;
+         foreach ($res as $value) {
+           foreach ($value as $e) {
+             array_push($tmp, $e);
+           }
+           array_push($toSend, $tmp);
+           $tmp = array();
+         }
+         $display = 'none';
+         return $this -> render('index.html.twig',[
+           'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
+         ]);
+        }
+        elseif (isset($_POST['orderBy'])){// caricamento ordinato in base al bottone cliccato
           $toOrder = $_POST['orderBy'];
           $tmp = array();
           $toSend = array();
@@ -36,29 +70,13 @@
             array_push($toSend, $tmp);
             $tmp = array();
           }
+          $display = 'none';
           $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
           return $this -> render('index.html.twig',[
-            'tableHead' => $firstRow, 'sent' => $toSend,
+            'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
           ]);
         }
-        else{ // dal secondo caricamento in poi
-          $csvFile = file('../src/Imports/users.csv');
-          $data = [];
-          foreach ($csvFile as $line) {
-            $data[] = str_getcsv($line);
-          }
-          $tmp = array();
-          $toSend = array();
-          $firstRow = array();
-          $res = $db->query("CREATE TABLE `dijiti`.`prova` ( `Nome` TINYTEXT NOT NULL ,
-          `Cognome` TINYTEXT NOT NULL ,
-          `Email` TINYTEXT NOT NULL ,
-          `Username` TINYTEXT NOT NULL ,
-          `Password` TINYTEXT NOT NULL ,
-          `Numero` TINYTEXT NOT NULL, PRIMARY KEY (`Username`) ) ENGINE = InnoDB;");
-          var_dump($res);
-          if($res === false){
-            echo 'tabella già esistente';
+        else{
             $tmp = array();
             $toSend = array();
             $firstRow = array();
@@ -74,35 +92,10 @@
             $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
             $db = null;
             return $this -> render('index.html.twig',[
-              'tableHead' => $firstRow, 'sent' => $toSend,
-            ]);
-          }else{
-            echo 'tabella creata';
-            $csvFile = file('../src/Imports/users.csv');
-            $data = [];
-            foreach ($csvFile as $line) {
-              $data[] = str_getcsv($line);
-            }
-            $firstLoad = false;
-            $tmp = array();
-            $toSend = array();
-            $firstRow = array();
-            foreach ($data as $value) {
-              foreach ($value as $e) {
-                array_push($tmp, $e);
-              }
-              $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$tmp[0]', '$tmp[1]', '$tmp[2]', '$tmp[3]', '$tmp[4]', '$tmp[5]')");
-              $tmp = array();
-
-            }
-            $res = $db->query("SELECT * FROM users");
-            $res = $res->fetchAll(PDO::FETCH_ASSOC);
-            $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
-            return $this -> render('index.html.twig',[
-              'tableHead' => $firstRow, 'sent' => $toSend,
+              'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
             ]);
           }
-        }
+
       }
 
       public function insert(): Response

@@ -7,6 +7,11 @@
   <body>
     <h2>Benvenuti!</h2>
     <p>Qui puoi cercare, modificare o eliminare gli utenti iscritti.</p>
+    <div id="caricaUtenti">
+      <form id="caricaForm" action="\index" method="POST">
+        <input type="submit" value = "caricaPrimaVolta" name="caricaPrimaVolta" id="caricaButton"></button>
+      </form>
+    </div>
       <div id = "insertDiv">
         <button type="button" id="formButton" onclick="toggleForm()">Inserisci un nuovo utente</button>
         <form id = "insertForm" action="\index\inserito" method = "POST">
@@ -60,6 +65,9 @@
 <style>
   #insertForm{
     display:none;
+  }
+  #caricaButton{
+    display:{{show}};
   }
   body{
     padding: 3%;
