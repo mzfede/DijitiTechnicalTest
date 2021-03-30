@@ -9,6 +9,15 @@
 
   class DijitiController extends AbstractController
   {
+    /**
+     * @var bool
+     */
+    private $firstLoad;
+
+    public function __construct(bool $firstLoad)
+    {
+        $this->first_load = true;
+    }
       public function index(): Response
       {
         try {
@@ -19,65 +28,11 @@
               $db = new PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass);
           } catch (PDOException $e) {
               echo "Errore: " . $e->getMessage();
-              die();
-          }
-        if (isset($_POST['orderBy'])){// caricamento ordinato in base al bottone cliccato
-          $toOrder = $_POST['orderBy'];
-          $tmp = array();
-          $toSend = array();
-          $firstRow = array();
-          $res = array();
-          $res = $db->query("SELECT * FROM `users` ORDER BY `users`.`$toOrder` ASC");
-          $res = $res->fetchAll(PDO::FETCH_ASSOC);
-          foreach ($res as $value) {
-            foreach ($value as $e) {
-              array_push($tmp, $e);
-            }
-            array_push($toSend, $tmp);
-            $tmp = array();
-          }
-          $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
-          return $this -> render('index.html.twig',[
-            'tableHead' => $firstRow, 'sent' => $toSend,
-          ]);
+          die();
         }
-        else{ // dal secondo caricamento in poi
-          $csvFile = file('../src/Imports/users.csv');
-          $data = [];
-          foreach ($csvFile as $line) {
-            $data[] = str_getcsv($line);
-          }
-          $tmp = array();
-          $toSend = array();
-          $firstRow = array();
-          $res = $db->query("CREATE TABLE `dijiti`.`prova` ( `Nome` TINYTEXT NOT NULL ,
-          `Cognome` TINYTEXT NOT NULL ,
-          `Email` TINYTEXT NOT NULL ,
-          `Username` TINYTEXT NOT NULL ,
-          `Password` TINYTEXT NOT NULL ,
-          `Numero` TINYTEXT NOT NULL, PRIMARY KEY (`Username`) ) ENGINE = InnoDB;");
-          var_dump($res);
-          if($res === false){
-            echo 'tabella già esistente';
-            $tmp = array();
-            $toSend = array();
-            $firstRow = array();
-            $res = $db->query("SELECT * FROM users");
-            $res = $res->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($res as $value) {
-              foreach ($value as $e) {
-                array_push($tmp, $e);
-              }
-              array_push($toSend, $tmp);
-              $tmp = array();
-            }
-            $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
-            $db = null;
-            return $this -> render('index.html.twig',[
-              'tableHead' => $firstRow, 'sent' => $toSend,
-            ]);
-          }else{
-            echo 'tabella creata';
+          if($this->firstLoad){ // primo caricamento da csv
+            print_r($this->firstLoad);
+            $this->first_load = false;
             $csvFile = file('../src/Imports/users.csv');
             $data = [];
             foreach ($csvFile as $line) {
@@ -101,7 +56,43 @@
             return $this -> render('index.html.twig',[
               'tableHead' => $firstRow, 'sent' => $toSend,
             ]);
+        }elseif (isset($_POST['orderBy'])){// caricamento ordinato in base al bottone cliccato
+          $toOrder = $_POST['orderBy'];
+          $tmp = array();
+          $toSend = array();
+          $firstRow = array();
+          $res = array();
+          $res = $db->query("SELECT * FROM `users` ORDER BY `users`.`$toOrder` ASC");
+          $res = $res->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($res as $value) {
+            foreach ($value as $e) {
+              array_push($tmp, $e);
+            }
+            array_push($toSend, $tmp);
+            $tmp = array();
           }
+          $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
+          return $this -> render('index.html.twig',[
+            'tableHead' => $firstRow, 'sent' => $toSend,
+          ]);
+        }elseif (!($this->firstLoad)) { // dal secondo caricamento in poi
+          $tmp = array();
+          $toSend = array();
+          $firstRow = array();
+          $res = $db->query("SELECT * FROM users");
+          $res = $res->fetchAll(PDO::FETCH_ASSOC);
+          foreach ($res as $value) {
+            foreach ($value as $e) {
+              array_push($tmp, $e);
+            }
+            array_push($toSend, $tmp);
+            $tmp = array();
+          }
+          $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
+          $db = null;
+          return $this -> render('index.html.twig',[
+            'tableHead' => $firstRow, 'sent' => $toSend,
+          ]);
         }
       }
 
