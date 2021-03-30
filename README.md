@@ -22,8 +22,9 @@ Requisiti eseguiti:
   - cancellazione degli utenti esistenti tramite apposito flag di stato;
   - notifica, tramite email, all'espletamento delle due precedenti senza riepilogo dei dati.
 
-Possibili migliorie, non eseguite per mancate conoscenze:
+Possibili migliorie, non eseguite per mancate conoscenze/tempo:
   - modifica e ricerca tra utenti;
   - ricapitolo dati nella mail;
   - gestione migliore delle pagine di reindirizzamento (index/inserito ed index/eliminato);
   - generare html direttamente nel Controller
+  - parte grafica
