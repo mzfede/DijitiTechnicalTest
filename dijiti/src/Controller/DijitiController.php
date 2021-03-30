@@ -16,7 +16,7 @@
 
     public function __construct(string $show)
     {
-        $this->show = $show;
+        $this->show = $show; // controlla il pulsante 'Carica per la prima volta', dopo la prima azione non viene più mostrato
     }
       public function index(): Response
       {
@@ -149,7 +149,6 @@
           'cognome' => $cognome,
           'email' =>  $email,
           'username' =>  $username,
-          'password' =>  $password,
           'telefono' =>  $telefono,
         ]);
       }
