@@ -5,7 +5,8 @@
   use Symfony\Component\HttpFoundation\Response;
   use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
   use Symfony\Component\Routing\Annotation\Route;
-
+  use Symfony\Component\Mailer\MailerInterface;
+  use Symfony\Component\Mime\Email;
 
   class DijitiController extends AbstractController
   {
@@ -113,7 +114,7 @@
 
       }
 
-      public function insert(): Response
+      public function insert(MailerInterface $mailer): Response
       {
         try {
             $hostname = "127.0.0.1";
@@ -129,31 +130,37 @@
         {
           $nome = $_POST['nome'];
           $cognome = $_POST['cognome'];
-          $email = $_POST['email'];
+          $mail = $_POST['email'];
           $username = $_POST['username'];
           $password = $_POST['password'];
           $telefono = $_POST['telefono'];
         }
         //gestione dubplicati
         try {
-          $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$nome', '$cognome', '$email', '$username', '$password', '$telefono')");
+          $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$nome', '$cognome', '$mail', '$username', '$password', '$telefono')");
         }
         catch (PDOException $e)
         {
           echo "Errore: " . $e->getMessage();
         }
-        $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$nome', '$cognome', '$email', '$username', '$password', '$telefono')");
         $db = null;
+        $email = (new Email())
+            ->from('from@example.com')
+            ->to('626816995d-587658@inbox.mailtrap.io')
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>Inserito utente</p>');
+        $mailer->send($email);
         return $this -> render('inserito.html.twig',[
           'nome' => $nome,
           'cognome' => $cognome,
-          'email' =>  $email,
+          'email' =>  $mail,
           'username' =>  $username,
           'telefono' =>  $telefono,
         ]);
       }
 
-      public function delete(): Response
+      public function delete(MailerInterface $mailer): Response
       {
         try {
             $hostname = "127.0.0.1";
@@ -179,6 +186,13 @@
           $res = $db->query("DELETE FROM `dijiti`.`users` WHERE `Username` = '$e'");
         }
         $db = null;
+        $email = (new Email())
+            ->from('from@example.com')
+            ->to('626816995d-587658@inbox.mailtrap.io')
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>Eliminato utente</p>');
+        $mailer->send($email);
         return $this -> render('eliminato.html.twig',[
           'usersToDelete' => $users,
         ]);
