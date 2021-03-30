@@ -9,9 +9,17 @@
 
   class DijitiController extends AbstractController
   {
+     /**
+     * @var string
+     */
+    private $show;
+
+    public function __construct(string $show)
+    {
+        $this->show = $show;
+    }
       public function index(): Response
       {
-        $display = 'block';
         try {
               $hostname = "127.0.0.1";
               $dbname = "dijiti";
@@ -35,9 +43,16 @@
            foreach ($value as $e) {
              array_push($tmp, $e);
            }
-           $sql = "INSERT INTO `users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES (?,?,?,?,?,?)";
-           $db->prepare($sql)->execute([$tmp[0], $tmp[1], $tmp[2], $tmp[3], $tmp[4], $tmp[5]]);
-           $tmp = array();
+          //gestione dubplicati
+          try {
+            $sql = "INSERT INTO `users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES (?,?,?,?,?,?)";
+            $db->prepare($sql)->execute([$tmp[0], $tmp[1], $tmp[2], $tmp[3], $tmp[4], $tmp[5]]);
+          }
+          catch (PDOException $e)
+          {
+            echo "Errore: " . $e->getMessage();
+          }
+          $tmp = array();
          }
          $res = $db->query("SELECT * FROM users");
          $res = $res->fetchAll(PDO::FETCH_ASSOC);
@@ -50,9 +65,9 @@
            array_push($toSend, $tmp);
            $tmp = array();
          }
-         $display = 'none';
+         $this->show = 'none';
          return $this -> render('index.html.twig',[
-           'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
+           'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $this->show ,
          ]);
         }
         elseif (isset($_POST['orderBy'])){// caricamento ordinato in base al bottone cliccato
@@ -70,10 +85,10 @@
             array_push($toSend, $tmp);
             $tmp = array();
           }
-          $display = 'none';
+          $this->show  = 'none';
           $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
           return $this -> render('index.html.twig',[
-            'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
+            'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $this->show,
           ]);
         }
         else{
@@ -92,7 +107,7 @@
             $firstRow = ['Nome', 'Cognome', 'Email', 'Username', 'Password', 'Numero'];
             $db = null;
             return $this -> render('index.html.twig',[
-              'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $display,
+              'tableHead' => $firstRow, 'sent' => $toSend, 'show' => $this->show ,
             ]);
           }
 
@@ -118,6 +133,14 @@
           $username = $_POST['username'];
           $password = $_POST['password'];
           $telefono = $_POST['telefono'];
+        }
+        //gestione dubplicati
+        try {
+          $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$nome', '$cognome', '$email', '$username', '$password', '$telefono')");
+        }
+        catch (PDOException $e)
+        {
+          echo "Errore: " . $e->getMessage();
         }
         $res = $db->query("INSERT INTO `dijiti`.`users` (`Nome`, `Cognome`, `Email`, `Username`, `Password`, `Numero`) VALUES ('$nome', '$cognome', '$email', '$username', '$password', '$telefono')");
         $db = null;

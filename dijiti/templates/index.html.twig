@@ -23,7 +23,7 @@
                 <input type = "text" id = "username" name="username" required>
                 <label>E-mail:</label>
                 <input type = "email" id = "email" name="email" required>
-                <label>Password:</label>
+                <br><label>Password:</label>
                 <input type = "password" id = "password" name="password" required>
                 <label>Telefono:</label>
                 <input type = "text" id = "telefono" name="telefono" pattern="[0-9]{10}">
@@ -32,7 +32,7 @@
       </div>
       <div id="deleteButtonDiv">
       </div>
-      <div id = "table">
+      <div id = "secondRow">
         <table>
         <form id = "deleteForm" action="\index" method="POST">
           <thead>
@@ -55,9 +55,9 @@
               {% endfor %}
             </tbody>
         </table>
-        <button type="submit" name="submitDelete" id="deleteButton">Elimina gli utenti selezionati</button>
-        </form>
       </div>
+      <button type="submit" name="submitDelete" id="deleteButton">Elimina gli utenti selezionati</button>
+      </form>
     </div>
   </body>
 </html>
@@ -69,14 +69,39 @@
   #caricaButton{
     display:{{show}};
   }
+  #orderButton{
+    width: 100%;
+    height: 100%;
+  }
+  #secondRow{
+    display: flex;
+    justify-content: space-between;
+  }
   body{
     padding: 3%;
   }
-  button{
+  input[type=submit], input[type=button], button{
+    background-color: #555555;
+    border: none;
+    color: white;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
     padding: 5px;
     font-size: 0.8em;
-    margin:5px;
+    
   }
+  td, th {
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+  th {
+    border:none;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: white;
+  }
+}
 
 </style>
 <script>
